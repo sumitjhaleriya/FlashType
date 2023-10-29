@@ -28,15 +28,40 @@ art = """
 
 def start_screen(stdscr):
     stdscr.clear()
-    # stdscr.addstr(0, 0, art, curses.A_BOLD)
-    stdscr.addstr(curses.LINES // 2 - 5 - 2  , curses.COLS // 2 - 5, "Welcome to")
-    stdscr.addstr(curses.LINES // 2 - 3 - 2, curses.COLS // 2 - 5, "Flash⚡Type!", curses.color_pair(5))
-    # stdscr.addstr(curses.LINES // 2, curses.COLS // 2 - 5, "")
-    stdscr.addstr(curses.LINES // 2 - 1 - 2, curses.COLS // 2 - 11, "Press any key to start")
-    stdscr.addstr(curses.LINES // 2 - 1 , 5, art, curses.color_pair(5))
+    custom_banner = """
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @______  _       ___   _____  _   _   _____ __   ________  _____ @
+    @|  ___|| |     / _ \ /  ___|| | | | |_   _|\ \ / /| ___ \|  ___|@
+    @| |_   | |    / /_\ \\ `--. | |_| |   | |   \ V / | |_/ /| |__  @
+    @|  _|  | |    |  _  | `--. \|  _  |   | |    \ /  |  __/ |  __| @
+    @| |    | |____| | | |/\__/ /| | | |   | |    | |  | |    | |___ @
+    @\_|    \_____/\_| |_/\____/ \_| |_/   \_/    \_/  \_|    \____/ @
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    """
+    custom_banner_lines = custom_banner.strip().split('\n')
+    banner_height = len(custom_banner_lines)
+    banner_width = max(len(line) for line in custom_banner_lines)
+
+    start_x = (curses.COLS - banner_width) // 2
+    start_y = (curses.LINES - banner_height) // 2
+
+    for i, line in enumerate(custom_banner_lines):
+        stdscr.addstr(start_y + i, start_x, line)
+
+    # Add a custom title
+    title = "Flash⚡Type"
+    title_x = (curses.COLS - len(title)) // 2
+    stdscr.addstr(start_y + banner_height + 1, title_x,
+                  title, curses.color_pair(5) | curses.A_BOLD)
+
+    # Additional information or instructions can be added here
+    instructions = "Press any key to start"
+    instructions_x = (curses.COLS - len(instructions)) // 2
+    stdscr.addstr(start_y + banner_height + 3,
+                  instructions_x, instructions, curses.A_BOLD)
 
     stdscr.refresh()
-    stdscr.getkey()
+    stdscr.getch()
 
 
 def load_text(desired_length=300):
